@@ -91,7 +91,7 @@ services:
       - ./api_data:/home/aptrs/.aptrs
       - static_volume:/home/aptrs/APTRS/APTRS/static/
       - media_volume:/home/aptrs/APTRS/APTRS/media/
-      - ./APTRS:/home/aptrs/APTRS
+      - ./:/home/aptrs/APTRS
     ports:
      - "8000:8000"
     networks:

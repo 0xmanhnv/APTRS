@@ -94,7 +94,7 @@ RUN groupadd --gid $USER_ID $APTRS_USER && \
     chown -R $APTRS_USER:$APTRS_USER /home/$APTRS_USER
 USER $APTRS_USER
 
-COPY --chown=$APTRS_USER:$APTRS_USER ./scripts/backend_dev.sh /home/$APTRS_USER/APTRS/scripts/backend_dev.sh
+
 
 RUN ["chmod", "+x", "/home/aptrs/APTRS/scripts/backend_dev.sh"]
 
