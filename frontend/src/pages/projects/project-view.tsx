@@ -45,7 +45,13 @@ function ProjectView(): JSX.Element {
   const [saving, setSaving] = useState(false);
   
   const handleOwnerChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setOwner(e.target.value.split(',').map(owner => owner.trim()));
+    if (Array.isArray(e.target.value)) {
+      setOwner(e.target.value.map(owner => owner.trim()));
+    } else if (typeof e.target.value === 'string') {
+      setOwner(e.target.value.split(',').map(owner => owner.trim()));
+    }
+
+    //setOwner(e.target.value.split(',').map(owner => owner.trim()));
   };
 
   const cancelEditing = () => {
@@ -126,14 +132,14 @@ function ProjectView(): JSX.Element {
     <>
       {project && (
         <Tabs value={selectedTab}>
-          <div className="max-w-screen flex-1 rounded-lg bg-white dark:bg-gray-darkest dark:text-white px-6 pb-4">
+          <div className="max-w-screen flex-1 rounded-lg bg-white dark:bg-black dark:text-white px-6 pb-4">
             <PageTitle title='Project Details' />
-            <TabsHeader className='mt-4'>
-              <Tab key="summary" value="summary" onClick={() => setSelectedTab('summary')}>Summary</Tab>
-              <Tab key="vulnerabilities" value="vulnerabilities" onClick={() => setSelectedTab('vulnerabilities')}>Vulnerabilities</Tab>
-              <Tab key="scopes" value="scopes" onClick={() => setSelectedTab('scopes')}>Scopes</Tab>
-              <Tab key="retest" value="retest" onClick={() => setSelectedTab('retest')}>Retest</Tab>
-              <Tab key="reports" value="reports" onClick={() => setSelectedTab('reports')}>Reports</Tab>
+            <TabsHeader className='mt-4 dark:bg-gray-200 bg-gray-700'>
+              <Tab key="summary" value="summary" onClick={() => setSelectedTab('summary')}className='text-white '>Summary</Tab>
+              <Tab key="vulnerabilities" value="vulnerabilities" onClick={() => setSelectedTab('vulnerabilities')}className='text-white '>Vulnerabilities</Tab>
+              <Tab key="scopes" value="scopes" onClick={() => setSelectedTab('scopes')}className='text-white '>Scopes</Tab>
+              <Tab key="retest" value="retest" onClick={() => setSelectedTab('retest')}className='text-white '>Retest</Tab>
+              <Tab key="reports" value="reports" onClick={() => setSelectedTab('reports')}className='text-white '>Reports</Tab>
             </TabsHeader>
             <TabsBody>
               <TabPanel value="summary">
@@ -143,7 +149,7 @@ function ProjectView(): JSX.Element {
                 <div className='w-2/3'>
                   <div className="w-full mb-4">
                     <label className={StyleLabel}>Name</label>
-                    <div className="relative cursor-text">{project.name}</div>
+                    <div className="relative cursor-text dark:text-white">{project.name}</div>
                   </div>
                   <div className="mt-4 mb-6">
                     <label className={StyleLabel}>Status</label>
@@ -159,7 +165,7 @@ function ProjectView(): JSX.Element {
                   </div>
                   <div className="w-full mb-4">
                     <label className={StyleLabel}>Project Owner</label>
-                    <div className="relative cursor-text">
+                    <div className="relative cursor-text  dark:text-white">
                       {editingOwner ? (
                         <div className='max-w-[200px]'>
                           <UserSelect
@@ -172,7 +178,7 @@ function ProjectView(): JSX.Element {
                           />
                           <div className='flex justify-start my-4'>
                             <button
-                              className='bg-primary text-white p-1 rounded-md mr-4 disabled:opacity-50'
+                              className='bg-primary text-white p-1 rounded-md mr-4 disabled:opacity-50 dark:text-white'
                               disabled={saving}
                               onClick={saveOwner}>
                               {saving ? 'Saving...' : 'Save'}
@@ -187,7 +193,7 @@ function ProjectView(): JSX.Element {
                         <>
                           {project.owner?.length > 0 ? project.owner.map(owner => owner.trim()).join(', ') : 'none'}
                           {(currentUserCan('Manage Projects') && currentUserCan('Assign Projects')) && (
-                            <span className='underline ml-4 cursor-pointer' onClick={() => setEditingOwner(true)}><PencilSquareIcon className="inline w-5" /></span>
+                            <span className='underline ml-4 cursor-pointer dark:text-white' onClick={() => setEditingOwner(true)}><PencilSquareIcon className="inline w-5" /></span>
                           )}
                         </>
                       )}
@@ -195,25 +201,25 @@ function ProjectView(): JSX.Element {
                   </div>
                   <div className="mt-4">
                     <label className={StyleLabel}>Type</label>
-                    <div className="relative cursor-text">{project.projecttype}</div>
+                    <div className="relative cursor-text dark:text-white">{project.projecttype}</div>
                   </div>
                   <div className="mt-4">
                     <label className={StyleLabel}>Company</label>
-                    <div className="relative cursor-text">{project.companyname}</div>
+                    <div className="relative cursor-text dark:text-white">{project.companyname}</div>
                   </div>
                   <div className='grid grid-cols-2'>
                     <div className="mt-4">
                       <label className={StyleLabel}>Start Date</label>
-                      <div className="relative cursor-text">{project.startdate}</div>
+                      <div className="relative cursor-text dark:text-white">{project.startdate}</div>
                     </div>
                     <div className="mt-4">
                       <label className={StyleLabel}>End Date</label>
-                      <div className="relative cursor-text">{project.enddate}</div>
+                      <div className="relative cursor-text dark:text-white">{project.enddate}</div>
                     </div>
                   </div>
                   <div className="mt-4">
                     <label className={StyleLabel}>Testing Type</label>
-                    <div className="relative cursor-text">{project.testingtype}</div>
+                    <div className="relative cursor-text dark:text-white">{project.testingtype}</div>
                   </div>
                   <div className="mt-4">
                     <label className={StyleLabel}>Project Exception</label>
