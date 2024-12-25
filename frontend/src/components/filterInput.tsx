@@ -32,20 +32,27 @@ export default function FilterInput(props: FilterInputProps) {
     }
   }, [props])
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target?.value === '') {
+    const inputValue = e.target.value;
+  
+    if (inputValue === '') {
+     
+  
+      // Ensure selectedValues is a string before calling handleRemove
+      if (!multiple && selectedValues && selectedValues) {
+        handleRemove(selectedValues[0]);
+      }
       setKbIndex(-1);
     }
+  
     setCommit(false);
-    setSearch(e.target.value);
-    const filtered = searchArray?.filter(item => 
-      item.label.toLowerCase().includes(e.target.value.toLowerCase()) || 
-      item.value.toLowerCase().includes(e.target.value.toLowerCase())
+    setSearch(inputValue);
+  
+    const filtered = searchArray?.filter(item =>
+      item.label?.toLowerCase().includes(inputValue.toLowerCase()) ||
+      item.value?.toLowerCase().includes(inputValue.toLowerCase())
     ) || [];
-    // setSelectedValues(e.target.value.split(', '));
     setFilteredArray(filtered);
-
-    
-  }
+  };
 
   const handleSelect = (value: string) => {
     if (multiple) {
@@ -73,7 +80,7 @@ export default function FilterInput(props: FilterInputProps) {
   }
 
   const propagateChange = (values: string[]) => {
-    const obj = formatValue(values.join(', '));
+    const obj = formatValue(values);
     onSelect(obj);
     inputRef.current?.focus();
   }
@@ -103,12 +110,13 @@ export default function FilterInput(props: FilterInputProps) {
     return;
   }
 
-  const formatValue = (value: string) => {
-    const obj = {target: {name: name, value:value}} 
-    return obj as React.ChangeEvent<HTMLInputElement>
+  const formatValue = (value: string[]) => {
+    const obj = { target: { name: name, value: value } };
+    return obj as unknown as React.ChangeEvent<HTMLInputElement>;
   }
+  
   return (
-    <div className="relative bg-white dark:bg-gray-darkest dark:text-white">
+    <div className="relative bg-white dark:bg-black dark:text-white">
       <div className="flex flex-wrap items-center gap-2 p-2 border rounded">
         {multiple && Array.isArray(selectedValues) && selectedValues.map((value, index) => (
           <div key={index} className="flex items-center bg-gray-lighter dark:bg-gray-darker rounded-full px-3 py-1">
@@ -129,7 +137,7 @@ export default function FilterInput(props: FilterInputProps) {
         />
       </div>
       {search.length > 0 && filteredArray.length > 0 &&
-        <div className="absolute top-50 z-[1000] left-1 bg-white border-gray-lighter border rounded-b-md max-h-[200px] overflow-y-scroll">
+        <div className="absolute top-50 z-[1000] left-1 bg-black border-gray-lighter border rounded-b-md max-h-[200px] overflow-y-scroll dark:bg-black dark:text-white">
           {filteredArray?.filter(item => !selectedValues.includes(item.value)).map((item, index) => (
             <FilterItem 
               key={index}
@@ -152,7 +160,7 @@ function FilterItem(props: {item: {label: string, value: string}, index: number,
     <div 
     onClick={() => onClick(item.value)} 
     id={`item-${name}-${index}`} 
-    className={`p-2 cursor-pointer ${kbIndex === index ? 'bg-gray-darkest text-white' : 'bg-gray-lightest text-gray-darkest hover:bg-gray-darkest hover:text-white'}`} 
+    className={`p-2 cursor-pointer dark:bg-black dark:text-white ${kbIndex === index ? 'bg-blue text-white' : 'bg-gray-lightest text-gray-darkest hover:bg-blue hover:text-white'}`} 
     key={index}
   >
     {display}

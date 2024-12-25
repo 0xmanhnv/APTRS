@@ -233,6 +233,10 @@ CELERY_BEAT_SCHEDULE = {
         "task": "accounts.tasks.flush_expired_tokens_task",
         "schedule": crontab(hour=0, minute=0),
     },
+    "update_cwe_json":{
+        "task": "vulnerability.tasks.update_cwe_json",
+        "schedule": timedelta(days=30),
+    }
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -315,7 +319,7 @@ CKEDITOR_UPLOAD_LOCATION = os.path.join(MEDIA_ROOT, 'poc')
 
 ALLOWED_TAGS = ['strong', 'em', 's', 'u', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'ul', 'li', 'img', 'a', 'span',
                 'code', 'blockquote', 'div', 'font', 'table', 'tr', 'td', 'th','pre','figure','figcaption','sup', 'input', 'thead', 'tbody', 'i', 'mark', 'label', 'sub',
-                ]
+               'br' ]
 
 LOGGING = {
     'version': 1,

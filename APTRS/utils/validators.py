@@ -4,6 +4,8 @@ from html.parser import HTMLParser
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from jinja2.sandbox import SandboxedEnvironment
+from docxtpl import InlineImage
 
 ALLOWED_TAGS = settings.ALLOWED_TAGS
 
@@ -50,7 +52,7 @@ def xss_validator(value):
 
     if validator.disallowed_tags:
         disallowed_tags_str = ", ".join(validator.disallowed_tags)
-        raise ValidationError(_("Only whitelisted tags are allowed"+disallowed_tags_str))
+        raise ValidationError(_("Only whitelisted tags are allowed "+disallowed_tags_str))
 
     if validator.disallowed_imgs:
         disallowed_img_str = ", ".join(validator.disallowed_imgs)

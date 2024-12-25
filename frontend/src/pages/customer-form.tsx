@@ -127,6 +127,24 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
     }));
     
   };
+
+  const handleCompanyChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const value = event.target.value; // This will be a string
+  
+    // Update form data with the single string value
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      ['company']: value[0],
+    }));
+    console.log(formData.company);
+  
+    // Set or clear the error for companyname
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      company: value !== '' ? '' : 'Company Name is required'
+    }));
+  };
+
   //needed a customer handler for phone number
   const handlePhoneInputChange = (value:string) => {
     setEditing(true)
@@ -190,7 +208,7 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
   if(loading) return <FormSkeleton numInputs={5}/>
   if (loadingError) return <ModalErrorMessage message={"Error loading customer"} />
   return (
-    <div className="w-full flex-1 rounded-lg bg-white dark:bg-gray-darkest">
+    <div className="w-full flex-1 rounded-lg bg-white dark:bg-black">
       <h1 className="mb-3 text-2xl px-4">
         {id ? "Edit" : "Create"} Customer
       </h1>
@@ -228,6 +246,7 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
                 className={StyleTextfield}
                 onChange={handleChange}
                 type="text"
+                autoComplete='off'
                 required
               />
               {errors.email && <p>{errors.email}</p>}
@@ -243,7 +262,7 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
                 onChange={handlePhoneInputChange}
                 name="number"
                 defaultCountry={defaultCountry}
-                className={StyleTextfield + ' pr-2'}
+                className={StyleTextfield}
                 id="number"
               />
               {errors.number && <FormErrorMessage message={errors.number} />}
@@ -254,14 +273,15 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
               Company
             </label>
             <div className="relative">
-              <CompanySelect
-                name="company"
-                id="company"
-                value={formData.company}
-                changeHandler={handleChange}
-                error={errors.company ? true : false}
-                required={true}
-              />
+             <CompanySelect 
+                                      name="companyname"
+                                      id="companyname"
+                                      defaultValue={''}
+                                      value={formData.company || ''} 
+                                      changeHandler={handleCompanyChange}
+                                      multiple={false}
+                                      error={errors.company ? true : false}
+                                    />
               {errors.company && <FormErrorMessage message={errors.company} />}
             </div>
           </div>
@@ -318,6 +338,7 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
                     onChange={handleChange}
                     type={passwordVisible ? "text" : "password"}
                     required={true}
+                    autoComplete="off"
                   />
                   <ShowPasswordButton passwordVisible={passwordVisible} clickHandler={() => setPasswordVisible(!passwordVisible)} />
                   
@@ -342,6 +363,7 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
                     disabled={Boolean(formData.id)}
                     type={passwordVisible ? "text" : "password"}
                     required={true}
+                    autoComplete="off"
                   />
                   <ShowPasswordButton passwordVisible={passwordVisible} clickHandler={() => setPasswordVisible(!passwordVisible)} />
                     
@@ -353,7 +375,7 @@ function CustomerForm({ id: customerId, forwardedRef, setRefresh, onClose }: Cus
         }
         <div className="w-full flex justify-center">
           <Button 
-            className="cursor-pointer bg-primary disabled:bg-gray-light disabled:border-gray-light disabled:shadow-none"
+            className="cursor-pointer bg-primary disabled:bg-gray-light disabled:border-gray-light disabled:shadow-none dark:text-white"
             disabled={!canSubmit()}
             type="submit">
               Save
